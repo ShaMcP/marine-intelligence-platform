@@ -1,6 +1,6 @@
 # Platform Architecture
 
-This dirrectory contains documentation and diagrams describing the architecture of the Maribe Intelligence PLatform.
+This directory contains documentation and diagrams describing the architecture of the Maribe Intelligence Platform.
 
 The platform is built using lakehouse architecture (Bronze, Silver, Gold) to support analystics and AI workloads.
 
