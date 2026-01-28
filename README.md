@@ -1,4 +1,4 @@
-# PLatform Architecture
+# Platform Architecture
 
 This dirrectory contains documentation and diagrams describing the architecture of the Maribe Intelligence PLatform.
 
