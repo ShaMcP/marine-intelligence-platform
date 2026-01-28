@@ -1,2 +1,7 @@
-# marine-intelligence-platform
-A Databricks-based lakehouse platform delivering analytic and AI ready marine and climate data products.
+# PLatform Architecture
+
+This dirrectory contains documentation and diagrams describing the architecture of the Maribe Intelligence PLatform.
+
+The platform is built using lakehouse architecture (Bronze, Silver, Gold) to support analystics and AI workloads.
+
+Further documentation and diagrams will be added as the platform evolves.
