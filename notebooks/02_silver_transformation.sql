@@ -18,7 +18,7 @@
 -- Each source table has the same schema from Bronze, so union is clean.
 -- Species column already populated at Bronze — no lookup needed.
 
-CREATE TABLE IF NOT EXISTS atlas_silver.species_tracking_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.species_tracking_silver (
     animal_id             STRING,
     timestamp             TIMESTAMP,
     latitude              DOUBLE,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS atlas_silver.species_tracking_silver (
 USING DELTA
 COMMENT 'Unified species tracking Silver table. 116 individual animals across 4 species. 69,776 records.';
 
-INSERT INTO atlas_silver.species_tracking_silver
+INSERT INTO mcphersonsharyn_silver.species_tracking_silver
 SELECT
     animal_id,
     timestamp,
@@ -45,7 +45,7 @@ SELECT
     species,
     data_source,
     current_timestamp() AS processed_timestamp
-FROM atlas_bronze.manta_ray_raw
+FROM mcphersonsharyn_bronze.manta_ray_raw
 
 UNION ALL
 
@@ -60,7 +60,7 @@ SELECT
     species,
     data_source,
     current_timestamp()
-FROM atlas_bronze.whale_shark_raw
+FROM mcphersonsharyn_bronze.whale_shark_raw
 
 UNION ALL
 
@@ -75,7 +75,7 @@ SELECT
     species,
     data_source,
     current_timestamp()
-FROM atlas_bronze.sperm_whale_raw
+FROM mcphersonsharyn_bronze.sperm_whale_raw
 
 UNION ALL
 
@@ -90,11 +90,11 @@ SELECT
     species,
     data_source,
     current_timestamp()
-FROM atlas_bronze.green_turtle_raw;
+FROM mcphersonsharyn_bronze.green_turtle_raw;
 
 -- Validate: check row counts by species
 SELECT species, COUNT(*) AS records
-FROM atlas_silver.species_tracking_silver
+FROM mcphersonsharyn_silver.species_tracking_silver
 GROUP BY species
 ORDER BY records DESC;
 
@@ -105,7 +105,7 @@ ORDER BY records DESC;
 -- Months 2–12 are INSERT INTO — not CREATE OR REPLACE.
 -- Learned this the hard way: CREATE OR REPLACE wipes prior inserts.
 
-CREATE TABLE IF NOT EXISTS atlas_silver.sea_surface_temperature_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.sea_surface_temperature_silver (
     latitude              DOUBLE,
     longitude             DOUBLE,
     sst_celsius           DOUBLE,
@@ -122,7 +122,7 @@ USING DELTA
 PARTITIONED BY (year)
 COMMENT 'Cleaned SST Silver table. NOAA monthly data 1993–2026. Spatial bounds added for grid alignment.';
 
-INSERT INTO atlas_silver.sea_surface_temperature_silver
+INSERT INTO mcphersonsharyn_silver.sea_surface_temperature_silver
 SELECT
     latitude,
     longitude,
@@ -135,21 +135,21 @@ SELECT
     FLOOR(longitude)                    AS lon_lower,
     FLOOR(longitude) + 1               AS lon_upper,
     current_timestamp()                 AS processed_timestamp
-FROM atlas_bronze.sst_raw
+FROM mcphersonsharyn_bronze.sst_raw
 WHERE sst_celsius IS NOT NULL
   AND latitude  BETWEEN -90  AND 90
   AND longitude BETWEEN -180 AND 180;
 
 -- Validate: all 12 months present per year
 SELECT year, month, COUNT(*) AS row_count
-FROM atlas_silver.sea_surface_temperature_silver
+FROM mcphersonsharyn_silver.sea_surface_temperature_silver
 GROUP BY year, month
 ORDER BY year, month;
 
 -- -----------------------------------------------------------------------------
 -- 3. CHLOROPHYLL — Silver cleaning
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS atlas_silver.chlorophyll_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.chlorophyll_silver (
     latitude              DOUBLE,
     longitude             DOUBLE,
     chlorophyll_mgl       DOUBLE,
@@ -166,7 +166,7 @@ USING DELTA
 PARTITIONED BY (year)
 COMMENT 'Cleaned chlorophyll Silver table. Indicator of phytoplankton / primary productivity.';
 
-INSERT INTO atlas_silver.chlorophyll_silver
+INSERT INTO mcphersonsharyn_silver.chlorophyll_silver
 SELECT
     latitude,
     longitude,
@@ -179,7 +179,7 @@ SELECT
     FLOOR(longitude)                    AS lon_lower,
     FLOOR(longitude) + 1               AS lon_upper,
     current_timestamp()                 AS processed_timestamp
-FROM atlas_bronze.chlorophyll_raw
+FROM mcphersonsharyn_bronze.chlorophyll_raw
 WHERE chlorophyll_mgl IS NOT NULL
   AND chlorophyll_mgl >= 0;
 
@@ -190,7 +190,7 @@ WHERE chlorophyll_mgl IS NOT NULL
 -- Join keys: latitude, longitude, year, month (all four required for accuracy).
 -- Same pattern used in production data pipelines for environmental integration.
 
-CREATE TABLE IF NOT EXISTS atlas_silver.environmental_conditions_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.environmental_conditions_silver (
     latitude              DOUBLE,
     longitude             DOUBLE,
     year                  INT,
@@ -204,7 +204,7 @@ USING DELTA
 PARTITIONED BY (year)
 COMMENT 'Unified environmental Silver table. SST LEFT JOIN chlorophyll on lat/lon/year/month.';
 
-INSERT INTO atlas_silver.environmental_conditions_silver
+INSERT INTO mcphersonsharyn_silver.environmental_conditions_silver
 SELECT
     s.latitude,
     s.longitude,
@@ -214,8 +214,8 @@ SELECT
     c.chlorophyll_mgl,
     s.temporal_resolution,
     current_timestamp()         AS processed_timestamp
-FROM atlas_silver.sea_surface_temperature_silver s
-LEFT JOIN atlas_silver.chlorophyll_silver c
+FROM mcphersonsharyn_silver.sea_surface_temperature_silver s
+LEFT JOIN mcphersonsharyn_silver.chlorophyll_silver c
     ON  s.latitude  = c.latitude
     AND s.longitude = c.longitude
     AND s.year      = c.year
@@ -226,12 +226,12 @@ SELECT
     COUNT(*)                                                    AS total_rows,
     SUM(CASE WHEN chlorophyll_mgl IS NULL THEN 1 ELSE 0 END)  AS null_chlorophyll,
     SUM(CASE WHEN sst_celsius     IS NULL THEN 1 ELSE 0 END)  AS null_sst
-FROM atlas_silver.environmental_conditions_silver;
+FROM mcphersonsharyn_silver.environmental_conditions_silver;
 
 -- -----------------------------------------------------------------------------
 -- 5. ENSO — Silver cleaning
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS atlas_silver.enso_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.enso_silver (
     year                  INT,
     enso_phase            STRING,
     oni_index             DOUBLE,
@@ -240,19 +240,19 @@ CREATE TABLE IF NOT EXISTS atlas_silver.enso_silver (
 USING DELTA
 COMMENT 'Cleaned ENSO Silver table. Used to contextualise SST anomalies across 33 years.';
 
-INSERT INTO atlas_silver.enso_silver
+INSERT INTO mcphersonsharyn_silver.enso_silver
 SELECT
     year,
     TRIM(UPPER(enso_phase)) AS enso_phase,   -- standardise casing
     oni_index,
     current_timestamp()
-FROM atlas_bronze.enso_raw
+FROM mcphersonsharyn_bronze.enso_raw
 WHERE year IS NOT NULL;
 
 -- -----------------------------------------------------------------------------
 -- 6. BLEACHING — Silver cleaning
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS atlas_silver.bleaching_silver (
+CREATE TABLE IF NOT EXISTS mcphersonsharyn_silver.bleaching_silver (
     year                      INT,
     bleaching_warning_cells   INT,
     processed_timestamp       TIMESTAMP DEFAULT current_timestamp()
@@ -260,25 +260,25 @@ CREATE TABLE IF NOT EXISTS atlas_silver.bleaching_silver (
 USING DELTA
 COMMENT 'Cleaned ICRI bleaching Silver table. 34 years 1993–2026. 2024 record: 447,475 cells.';
 
-INSERT INTO atlas_silver.bleaching_silver
+INSERT INTO mcphersonsharyn_silver.bleaching_silver
 SELECT
     year,
     bleaching_warning_cells,
     current_timestamp()
-FROM atlas_bronze.bleaching_raw
+FROM mcphersonsharyn_bronze.bleaching_raw
 WHERE year                    IS NOT NULL
   AND bleaching_warning_cells IS NOT NULL
   AND bleaching_warning_cells  > 0;
 
 -- Final validation across all Silver tables
-SELECT 'species_tracking'           AS table_name, COUNT(*) AS rows FROM atlas_silver.species_tracking_silver
+SELECT 'species_tracking'           AS table_name, COUNT(*) AS rows FROM mcphersonsharyn_silver.species_tracking_silver
 UNION ALL
-SELECT 'sst',                                       COUNT(*)         FROM atlas_silver.sea_surface_temperature_silver
+SELECT 'sst',                                       COUNT(*)         FROM mcphersonsharyn_silver.sea_surface_temperature_silver
 UNION ALL
-SELECT 'chlorophyll',                               COUNT(*)         FROM atlas_silver.chlorophyll_silver
+SELECT 'chlorophyll',                               COUNT(*)         FROM mcphersonsharyn_silver.chlorophyll_silver
 UNION ALL
-SELECT 'environmental_conditions',                  COUNT(*)         FROM atlas_silver.environmental_conditions_silver
+SELECT 'environmental_conditions',                  COUNT(*)         FROM mcphersonsharyn_silver.environmental_conditions_silver
 UNION ALL
-SELECT 'enso',                                      COUNT(*)         FROM atlas_silver.enso_silver
+SELECT 'enso',                                      COUNT(*)         FROM mcphersonsharyn_silver.enso_silver
 UNION ALL
-SELECT 'bleaching',                                 COUNT(*)         FROM atlas_silver.bleaching_silver;
+SELECT 'bleaching',                                 COUNT(*)         FROM mcphersonsharyn_silver.bleaching_silver;
