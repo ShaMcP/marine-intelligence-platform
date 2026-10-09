@@ -234,10 +234,6 @@ All six animations are driven by the same Databricks Gold layer queries used for
 
 The chlorophyll concentration bounding box for the Gulf of Mexico covered 17–22°N — which excluded the northern Gulf (22–32°N) where whale sharks actually live. This means the habitat stress index for Whale Shark is calculated without valid CC data for most of their range. Documented honestly in the animation notes and flagged for a next fix via a supplemental NOAA CC download.
 
-**The unexpected finding:**
-
-While building the ENSO animation, I discovered that in Raja Ampat, La Niña average SST (29.47°C) is *higher* than El Niño SST (28.80°C). ENSO theory predicts the opposite — La Niña should cool the Indo-Pacific. The finding suggests that long-term ocean warming has pushed the baseline temperature high enough that even La Niña's cooling signal can no longer bring SST below El Niño levels from a decade ago. The ENSO signal hasn't disappeared; the warming trend underneath it has grown large enough to obscure it.
-
 **What I learned:**
 - The Canvas API is powerful enough for production-quality data visualisation with no external libraries
 - Bilinear interpolation at render time (for the heatmap) is computationally cheap enough to run in a `requestAnimationFrame` loop
