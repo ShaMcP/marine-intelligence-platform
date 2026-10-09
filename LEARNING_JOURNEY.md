@@ -143,14 +143,6 @@ Raw SST data has thousands of lat/lon coordinates. Querying it at full resolutio
 
 When I ran the Raja Ampat trend query, I got +0.52°C warming over 33 years. That's the highest rate in the ATLAS dataset. Raja Ampat is the primary habitat of the Reef Manta Rays I was tracking. The animals showing the most temperature exposure are living in the fastest-warming patch of ocean I measured.
 
-
-What I learned:
-Gold tables should answer questions, not just store data — design them around your analytical goals
-A star schema pays off when data arrives at different resolutions — don’t flatten it prematurely
-Get the grain of your dimension tables right before building anything on top of them
-H3 spatial indexing solves the floating point join problem cleanly — bucket first, join on the key
-Spatial bucketing is a skill — too coarse and you lose signal, too fine and you lose performance
-Validation at Gold is just as important as Bronze — aggregation can hide missing data
 ---
 
 ## Phase 5 — Tableau: Desktop to Public
