@@ -4,11 +4,13 @@ Global species tracking map built with Kepler.gl.
 
 ---
 
-## File
+## Files
 
 | File | Description |
 |---|---|
-| `atlas_kepler_map.json` | Kepler.gl map export — 69,776 observations across three ocean basins |
+| `atlas_kepler_overview.png` | Full global view — all 69,776 observations across three ocean basins |
+
+*(Add any additional screenshot filenames here)*
 
 ---
 
@@ -18,5 +20,6 @@ The Kepler.gl map visualises all 69,776 species tracking observations
 across the Raja Ampat, Gulf of Mexico, and Chagos Archipelago regions.
 Dot size is scaled by habitat stress index.
 
-To open: go to [kepler.gl](https://kepler.gl), click **Load Map**, and
-upload the JSON file.
+The interactive map was built and explored in Kepler.gl. Screenshots
+are provided here for reference — the live interactive version was used
+for analysis and dashboard development.
