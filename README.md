@@ -68,28 +68,14 @@ Six canvas-based animations built to show how animal movements relate to ocean c
 ---
 
 ## Tech Stack
-Data Sources
-├── Movebank (satellite tracking — 116 animals)
-├── NOAA ERDDAP (sea surface temperature)
-├── NOAA Coral Reef Watch (bleaching alert areas)
-└── NOAA PSL (ENSO / MEI index)
 
-Pipeline — Databricks on AWS
-├── Bronze → Raw ingestion (Delta Lake)
-├── Silver → Cleaned, validated, joined
-└── Gold → Aggregated for analysis (star schema)
-
-Visualisation
-├── Kepler.gl → Global species tracking map
-├── Tableau Public → Four interactive dashboards
-└── Canvas / HTML → Six animated species visualisations
-
-Languages & Tools
-├── PySpark / Python
-├── SQL (Unity Catalog)
-├── H3 spatial indexing
-└── Delta Lake / Unity Catalog Volumes
-
+| Layer | Tool |
+|---|---|
+| **Data Sources** | Movebank · NOAA ERDDAP · NOAA Coral Reef Watch · NOAA PSL |
+| **Pipeline** | Databricks on AWS — Bronze / Silver / Gold (Delta Lake) |
+| **Spatial indexing** | H3 hexagonal indexing (Unity Catalog) |
+| **Visualisation** | Kepler.gl · Tableau Public · Canvas API (HTML) |
+| **Languages** | PySpark · Python · SQL |
 
 ---
 
@@ -107,22 +93,21 @@ Languages & Tools
 ---
 
 ## Project Structure
-ATLAS/
-├── data/ # CSV data files
-├── notebooks/ # Databricks notebooks
-│ ├── bronze/ # Raw ingestion
-│ ├── silver/ # Transformation & validation
-│ └── gold/ # Aggregation & analysis
-├── sql/ # Unity Catalog SQL scripts
-├── design/ # Animated visualisations (HTML)
-│ ├── atlas_animation.html # Species tracking dots
-│ ├── atlas_trails.html # Movement trails
-│ ├── atlas_heatmap.html # SST thermal landscape
-│ ├── atlas_enso.html # ENSO phase overlay
-│ ├── atlas_stress.html # Habitat stress index
-│ └── atlas_turtle_deepdive.html # Green Turtle deep dive
-├── kepler/ # Kepler.gl map export
-└── README.md
+
+| Path | Description |
+|---|---|
+| `data/` | CSV data files |
+| `notebooks/01_bronze_ingestion.sql` | Raw ingestion into Delta Lake |
+| `notebooks/02_silver_transformation.sql` | Cleaning, validation, joins |
+| `notebooks/03_gold_analytics.sql` | Aggregation and star schema |
+| `scripts/build_combined.py` | Builds ATLAS_Combined.csv |
+| `design/atlas_animation.html` | Species tracking dots |
+| `design/atlas_trails.html` | Movement trails |
+| `design/atlas_heatmap.html` | SST thermal landscape |
+| `design/atlas_enso.html` | ENSO phase overlay |
+| `design/atlas_stress.html` | Habitat stress index |
+| `design/atlas_turtle_deepdive.html` | Green Turtle deep dive |
+| `kepler/` | Kepler.gl map export |
 
 ---
 
@@ -136,12 +121,12 @@ ATLAS exists to make that visible — connecting the temperature numbers to the 
 
 ## Contact
 
-Sharyn McPherson** — Data Engineer at Capgemini
+**Sharyn McPherson** — Data Engineer at Capgemini
 📧 atlasmarine.data@gmail.com
 🐙 github.com/ShaMcP/marine-intelligence-platform
 📊 public.tableau.com/app/profile/sharyn.mcpherson
 
 ---
 
-Data: Movebank · NOAA ERDDAP · NOAA Coral Reef Watch · NOAA PSL
-Built with Databricks · PySpark · Tableau Public · Kepler.gl · Canvas API
+*Data: Movebank · NOAA ERDDAP · NOAA Coral Reef Watch · NOAA PSL*
+*Built with Databricks · PySpark · Tableau Public · Kepler.gl · Canvas API*
