@@ -213,12 +213,8 @@ Six self-contained HTML canvas animations, each built to answer a different ques
 
 All six animations are driven by the same Databricks Gold layer queries used for the dashboards — the difference is output format. Instead of CSVs for Tableau, I wrote queries that export sampled tracking data with environmental columns (SST, MEI value, ENSO phase, habitat stress index) and converted them from Apple Numbers format into embedded JSON using a Python `numbers-parser` script.
 
-The embedded JSON structure groups observations by species → year → month, so each animation frame is an O(1) lookup:
-```python
-tracks[species][year][month]  # → [[lat, lon, sst, ...], ...]
-```
 
-**The mistake documented in the queries (Mistake 6):**
+**The mistake documented in the queries:**
 
 The chlorophyll concentration bounding box for the Gulf of Mexico covered 17–22°N — which excluded the northern Gulf (22–32°N) where whale sharks actually live. This means the habitat stress index for Whale Shark is calculated without valid CC data for most of their range. Documented honestly in the animation notes and flagged for Phase 2 fix via a supplemental NOAA CC download.
 
