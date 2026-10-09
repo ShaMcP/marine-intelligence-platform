@@ -167,7 +167,7 @@ After publishing to Tableau Public and reopening the workbook, all charts went b
 
 This was the biggest blocker. Tableau Public does not support multiple data source connections in one workbook. I had the species tracking data as one source and the bleaching data as a second — and as soon as both were connected, every single dashboard showed "Dashboard Unavailable". Not just the bleaching one. All of them.
 
-*Fix:* Move the join upstream. I merged the bleaching warning cells into the species tracking CSV using a Python LEFT JOIN on year (see `notebooks/04_atlas_combined_build.py`). One CSV, one connection, all dashboards restored. The lesson: Tableau Public's constraints have to shape your data architecture, not the other way around.
+*Fix:* Move the join upstream. I merged the bleaching warning cells into the species tracking CSV using a LEFT JOIN on year. One CSV, one connection, all dashboards restored. The lesson: Tableau Public's constraints have to shape your data architecture, not the other way around.
 
 ---
 
