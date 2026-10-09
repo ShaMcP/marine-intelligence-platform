@@ -120,7 +120,21 @@ This single query caught every partial ingestion mistake before it propagated do
 - `environmental_monthly_summary` — SST and chlorophyll aggregated by year/month/spatial grid
 - `species_sst_summary` — per-species temperature analytics
 - `bleaching_timeline` — annual bleaching trend with ENSO context
-- `raja_ampat_warming` — Raja Ampat SST trend 
+- `raja_ampat_warming` — Raja Ampat SST trend
+
+**Why a star schema:
+
+When I started designing the Gold layer I had to decide how to structure it. The straightforward option was a wide flat table — one row per observation with every column (species, location, SST, chlorophyll, bleaching status) alongside it. Simple to query, easy to export. I chose not to do that.
+
+Instead I built a star schema: a central fact_species_observations table holding the measurements and foreign keys, surrounded by dimension tables — dim_species, dim_location, dim_environment, dim_date. The reason was practical: four species, three ocean basins, and environmental data arriving at different spatial and temporal resolutions. A flat table would have meant repeating SST and chlorophyll values across thousands of tracking rows, or doing messy wide joins at query time. With dimensions, the environmental data lives in one place and joins cleanly to observations on shared keys (H3 spatial index + year + month).
+
+The star schema also made the Gold layer reusable. Any new question — which species experienced the most thermal stress in 2016?, where were green turtles during the last bleaching event? — is a join from the same fact table, not a new export or a new pipeline.
+
+What I learned about it along the way:
+
+Designing the schema was straightforward. Getting the joins right was harder. The biggest lesson was that you can’t just join on latitude and longitude directly — floating point coordinates from two different sources rarely match exactly. I solved this with H3 hexagonal spatial indexing: both the tracking observations and the environmental data are bucketed into H3 cells at resolution 4, so the join is on a consistent string key rather than two imprecise floats. Once that clicked, the joins were clean and fast.
+
+The second lesson was about key grain. My first version of dim_environment was keyed on H3 cell alone — one row per grid cell. That fell apart immediately when I added year and month: SST in the same cell varies across time. The correct grain is H3 + year + month, and every join downstream uses all three. Getting the grain wrong early cost me time rebuilding tables I thought were finished.
 
 **The spatial bucketing decision:**
 Raw SST data has thousands of lat/lon coordinates. Querying it at full resolution is slow and noisy. I rounded latitude and longitude to 1 decimal place to create spatial grid cells. This reduced volume significantly, smoothed out measurement noise, and made the Gold tables fast enough for Tableau without pre-aggregation.
