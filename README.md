@@ -7,7 +7,7 @@
 
 ## What is ATLAS?
 
-ATLAS Marine is an independent conservation data platform built on **Databricks Lakehouse** architecture. It integrates satellite tracking data from **116 individual marine animals** with 33 years of NOAA sea surface temperature records, coral bleaching alerts, and ENSO climate indices — then surfaces the findings through interactive dashboards and a global tracking map.
+ATLAS Marine is an independent conservation data platform built on **Databricks Lakehouse** architecture. It integrates satellite tracking data from **116 individual marine animals** with 33 years of NOAA sea surface temperature records, coral bleaching alerts, and ENSO climate indices — then surfaces the findings through interactive dashboards, a global tracking map, and a suite of animated species visualisations.
 
 This is a portfolio project built entirely outside of work hours to demonstrate end-to-end data engineering for marine conservation.
 
@@ -22,6 +22,24 @@ This is a portfolio project built entirely outside of work hours to demonstrate 
 | 📍 Thermal stress overlap | 3 individual green turtles tracked by ATLAS were present in the Chagos Archipelago during the 2016 mass bleaching event |
 | 🦈 All species above 30°C | Every species in the dataset has experienced SST above 30°C at least once during their tracked period |
 | 🌊 Four bleaching events | 1998 · 2010 · 2016 · 2024 — each event worse than the last |
+| 🌊 La Niña paradox | In Raja Ampat, La Niña average SST (29.47°C) **exceeds** El Niño SST (28.80°C) — long-term warming is overriding the expected ENSO cooling signal |
+
+---
+
+## Animated Visualisations
+
+Six canvas-based animations built to show how animal movements relate to ocean conditions over time. All run in the browser — no installation needed.
+
+| Animation | Description |
+|---|---|
+| **Species Tracking** | 4-panel dot animation — all four species across their full tracking period |
+| **Movement Trails** | Fading movement history with adjustable trail length (2 / 4 / 6 / 12 months) |
+| **SST Thermal Landscape** | Bilinear-interpolated temperature heatmap beneath observation dots |
+| **ENSO Phase Overlay** | Panels tint by El Niño / La Niña / Neutral phase with live MEI index bar |
+| **Habitat Stress Index** | Dots coloured 0–4 by composite pressure score (SST + chlorophyll + microplastics + bleaching) |
+| **Green Turtle Deep Dive** | 10,000 full-resolution observations in the Western Indian Ocean — the densest view in the dataset |
+
+> **Data note:** Telemetry reflects deployments available at time of ingestion. Phase 2 will extend all four species to present via Movebank and OBIS-SEAMAP re-query (current cutoffs: Green Turtle 2012–2019, Reef Manta Ray 2014–2022, Sperm Whale 2011–2013, Whale Shark 2009–2015).
 
 ---
 
@@ -50,77 +68,3 @@ This is a portfolio project built entirely outside of work hours to demonstrate 
 ---
 
 ## Tech Stack
-
-```
-Data Sources
-├── Movebank (satellite tracking — 116 animals)
-├── NOAA ERDDAP (sea surface temperature)
-├── NOAA Coral Reef Watch (bleaching alert areas)
-└── NOAA PSL (ENSO / MEI index)
-
-Pipeline — Databricks on AWS
-├── Bronze  →  Raw ingestion (Delta Lake)
-├── Silver  →  Cleaned, validated, joined
-└── Gold    →  Aggregated for analysis
-
-Visualisation
-├── Kepler.gl  →  Global species tracking map
-└── Tableau Public  →  Four interactive dashboards
-
-Languages & Tools
-├── PySpark / Python
-├── SQL (Unity Catalog)
-├── H3 spatial indexing
-└── Delta Lake / Unity Catalog Volumes
-```
-
----
-
-## Data Files
-
-| File | Rows | Description |
-|---|---|---|
-| `ATLAS_Combined.csv` | 69,776 | All four species — tracking + SST + bleaching by year |
-| `ATLAS_Bleaching_Timeline_clean.csv` | 34 | Annual global bleaching warning cells 1993–2026 |
-| `ATLAS_Manta_Ray_clean.csv` | 3,224 | Reef Manta Ray — Raja Ampat |
-| `ATLAS_Whale_Shark_clean.csv` | 3,382 | Whale Shark — Gulf of Mexico |
-| `ATLAS_Sperm_Whale_clean.csv` | 7,759 | Sperm Whale — Gulf of Mexico |
-| `ATLAS_Green_Turtle_clean.csv` | 55,411 | Green Turtle — Chagos Archipelago |
-
----
-
-## Project Structure
-
-```
-ATLAS/
-├── data/                  # CSV data files
-├── notebooks/             # Databricks notebooks
-│   ├── bronze/            # Raw ingestion
-│   ├── silver/            # Transformation & validation
-│   └── gold/              # Aggregation & analysis
-├── sql/                   # Unity Catalog SQL scripts
-├── kepler/                # Kepler.gl map export
-└── README.md
-```
-
----
-
-## Why This Matters
-
-Coral reefs support **25% of all marine life** and over **1 billion people** depend on them for food and income. The 2024 bleaching event — the worst on record — happened without El Niño. The ocean is warming fast enough that background temperatures alone now trigger mass bleaching events.
-
-ATLAS exists to make that visible — connecting the temperature numbers to the animals actually living in those waters.
-
----
-
-## Contact
-
-**Sharyn McPherson** — Data Engineer  
-📧 atlasmarine.data@gmail.com  
-🐙 github.com/ShaMcP/ATLAS  
-📊 public.tableau.com/app/profile/sharyn.mcpherson
-
----
-
-*Data: Movebank · NOAA ERDDAP · NOAA Coral Reef Watch · NOAA PSL*  
-*Built with Databricks · PySpark · Tableau Public · Kepler.gl*
