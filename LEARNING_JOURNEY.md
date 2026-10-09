@@ -255,10 +255,9 @@ These came from the data, not from what I expected to find.
 | 2024 bleaching anomaly | 447,475 warning cells during **Neutral ENSO** — previous records were all El Niño years |
 | Green turtles in Chagos 2016 | 3 green turtles present during the 2016 bleaching event — confirmed by timestamp overlap |
 | All species above 30°C | Every tracked species recorded SST above thermal stress threshold at least once |
-| La Niña paradox in Raja Ampat | La Niña SST (29.47°C) exceeds El Niño SST (28.80°C) — long-term warming overriding ENSO signal |
 
-The 2024 bleaching finding is the one that surprised me most. Every major bleaching event before it — 1998, 2010, 2016 — coincided with El Niño warming. 2024 broke the record in a Neutral ENSO year. The ocean was warm enough on its own.
 
+The 2024 bleaching finding is the one that surprised me most. Every major bleaching event before it — 1998, 2010, 2016.
 ---
 
 ## Tech Stack
