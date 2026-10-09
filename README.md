@@ -121,7 +121,7 @@ ATLAS exists to make that visible — connecting the temperature numbers to the 
 
 ## Contact
 
-**Sharyn McPherson** — Data Engineer at Capgemini
+**Sharyn McPherson** — Data Engineer 
 📧 atlasmarine.data@gmail.com
 🐙 github.com/ShaMcP/marine-intelligence-platform
 📊 public.tableau.com/app/profile/sharyn.mcpherson
