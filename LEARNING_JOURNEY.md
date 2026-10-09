@@ -329,6 +329,6 @@ If you're a researcher, conservationist, or data engineer working in this space 
 
 ---
 
-*Built independently, outside of work hours, to demonstrate end-to-end data engineering for marine conservation.*
 
-*Sharyn McPherson | Glasgow | [github.com/ShaMcP/marine-intelligence-platform](https://github.com/ShaMcP/marine-intelligence-platform)*
+
+*Sharyn McPherson | [github.com/ShaMcP/marine-intelligence-platform](https://github.com/ShaMcP/marine-intelligence-platform)*
