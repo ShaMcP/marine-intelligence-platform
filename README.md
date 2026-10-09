@@ -68,3 +68,80 @@ Six canvas-based animations built to show how animal movements relate to ocean c
 ---
 
 ## Tech Stack
+Data Sources
+├── Movebank (satellite tracking — 116 animals)
+├── NOAA ERDDAP (sea surface temperature)
+├── NOAA Coral Reef Watch (bleaching alert areas)
+└── NOAA PSL (ENSO / MEI index)
+
+Pipeline — Databricks on AWS
+├── Bronze → Raw ingestion (Delta Lake)
+├── Silver → Cleaned, validated, joined
+└── Gold → Aggregated for analysis (star schema)
+
+Visualisation
+├── Kepler.gl → Global species tracking map
+├── Tableau Public → Four interactive dashboards
+└── Canvas / HTML → Six animated species visualisations
+
+Languages & Tools
+├── PySpark / Python
+├── SQL (Unity Catalog)
+├── H3 spatial indexing
+└── Delta Lake / Unity Catalog Volumes
+
+
+---
+
+## Data Files
+
+| File | Rows | Description |
+|---|---|---|
+| `ATLAS_Combined.csv` | 69,776 | All four species — tracking + SST + bleaching by year |
+| `ATLAS_Bleaching_Timeline_clean.csv` | 34 | Annual global bleaching warning cells 1993–2026 |
+| `ATLAS_Manta_Ray_clean.csv` | 3,224 | Reef Manta Ray — Raja Ampat |
+| `ATLAS_Whale_Shark_clean.csv` | 3,382 | Whale Shark — Gulf of Mexico |
+| `ATLAS_Sperm_Whale_clean.csv` | 7,759 | Sperm Whale — Gulf of Mexico |
+| `ATLAS_Green_Turtle_clean.csv` | 55,411 | Green Turtle — Chagos Archipelago |
+
+---
+
+## Project Structure
+ATLAS/
+├── data/ # CSV data files
+├── notebooks/ # Databricks notebooks
+│ ├── bronze/ # Raw ingestion
+│ ├── silver/ # Transformation & validation
+│ └── gold/ # Aggregation & analysis
+├── sql/ # Unity Catalog SQL scripts
+├── design/ # Animated visualisations (HTML)
+│ ├── atlas_animation.html # Species tracking dots
+│ ├── atlas_trails.html # Movement trails
+│ ├── atlas_heatmap.html # SST thermal landscape
+│ ├── atlas_enso.html # ENSO phase overlay
+│ ├── atlas_stress.html # Habitat stress index
+│ └── atlas_turtle_deepdive.html # Green Turtle deep dive
+├── kepler/ # Kepler.gl map export
+└── README.md
+
+---
+
+## Why This Matters
+
+Coral reefs support **25% of all marine life** and over **1 billion people** depend on them for food and income. The 2024 bleaching event — the worst on record — happened without El Niño. The ocean is warming fast enough that background temperatures alone now trigger mass bleaching events.
+
+ATLAS exists to make that visible — connecting the temperature numbers to the animals actually living in those waters.
+
+---
+
+## Contact
+
+Sharyn McPherson** — Data Engineer at Capgemini
+📧 atlasmarine.data@gmail.com
+🐙 github.com/ShaMcP/marine-intelligence-platform
+📊 public.tableau.com/app/profile/sharyn.mcpherson
+
+---
+
+Data: Movebank · NOAA ERDDAP · NOAA Coral Reef Watch · NOAA PSL
+Built with Databricks · PySpark · Tableau Public · Kepler.gl · Canvas API
