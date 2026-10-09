@@ -1,55 +1,80 @@
 # Data Sources
 
-This document describes the initial data sources used by the Marine
-Intelligence Platform and their intended analytical purpose.
+All data sources used in ATLAS Marine are publicly available. This document
+describes each source, what was ingested, and its analytical purpose.
 
 ---
 
-## Environmental & Phytoplankton Data
+## Species Tracking — Movebank
 
-### Satellite-Derived Ocean Data
-- Sea surface temperature
-- Chlorophyll concentration
-- Ocean colour indicators
+**Source:** [movebank.org](https://www.movebank.org)
+**Format:** CSV (one file per species)
 
-**Purpose:**
-Used to analyse environmental conditions linked to ecosystem health and
-phytoplankton abundance.
+| Species | Region | Animals | Years | Observations |
+|---|---|---|---|---|
+| Reef Manta Ray *(Mobula alfredi)* | Raja Ampat, Indonesia | — | 2014–2022 | 3,224 |
+| Whale Shark *(Rhincodon typus)* | Gulf of Mexico | — | 2009–2015 | 3,382 |
+| Sperm Whale *(Physeter macrocephalus)* | Gulf of Mexico | — | 2011–2013 | 7,759 |
+| Green Turtle *(Chelonia mydas)* | Chagos Archipelago | — | 2012–2019 | 55,411 |
 
----
+**Total:** 116 individual animals · 69,776 observations
 
-### Phytoplankton & Ecosystem Data
-- Species-level or group-level plankton observations
-- Bloom frequency and density (where available)
-
-**Purpose:**
-Provides insight into primary productivity and its relationship with climate
-change and marine life behaviour.
+**Purpose:** Core biological dataset. Timestamped lat/lon positions joined
+with environmental data to reveal how warming seas affect animal movement.
 
 ---
 
-## Animal Movement Data
+## Sea Surface Temperature — NOAA ERDDAP
 
-### Whale Migration Data
-- Timestamped location tracking
-- Species-level movement patterns
+**Source:** NOAA ERDDAP
+**Format:** Monthly CSV files (12 per year)
+**Coverage:** 1993–2026 (33 years)
 
-**Purpose:**
-Used to understand migration routes and behavioural changes in response to
-environmental conditions.
-
----
-
-### Shark Movement Data
-- Tagged movement data with geospatial coordinates
-
-**Purpose:**
-Supports analysis of predator behaviour and ecosystem balance.
+**Purpose:** Primary environmental variable. Joined to species tracking by
+lat/lon grid and year/month to calculate per-observation thermal conditions.
+Used in all four Tableau dashboards and all six animations.
 
 ---
 
-## Data Source Characteristics
+## Chlorophyll Concentration — NOAA
 
-- Publicly available or research-based datasets
-- Time-series and geospatial in nature
-- Ingested in raw format into the Bronze layer
+**Source:** NOAA
+**Format:** Monthly CSV files
+**Coverage:** Gulf of Mexico (17–22°N) and Indian Ocean / Raja Ampat regions
+
+**Purpose:** Indicator of phytoplankton abundance and primary productivity.
+Combined with SST in the Silver `environmental_conditions_silver` table.
+
+> **Known gap:** The Gulf of Mexico bounding box (17–22°N) excludes the
+> northern Gulf (22–32°N) where whale sharks actually range. Chlorophyll
+> data for whale shark observations is therefore incomplete. Fix planned
+> for Phase 2: supplemental NOAA download for 22–32°N.
+
+---
+
+## ENSO Climate Index — NOAA PSL
+
+**Source:** NOAA Physical Sciences Laboratory
+**Format:** CSV (annual)
+**Coverage:** 1993–2026
+
+**Fields:** Year · ENSO phase (El Niño / La Niña / Neutral) · Oceanic Niño Index (ONI)
+
+**Purpose:** Climate context for SST anomalies and bleaching events. Key
+finding: in Raja Ampat, La Niña average SST (29.47°C) now exceeds El Niño
+SST (28.80°C) — long-term warming is overriding the expected ENSO cooling signal.
+
+---
+
+## Coral Bleaching Warning Cells — ICRI
+
+**Source:** International Coral Reef Initiative (ICRI)
+**Format:** CSV (annual)
+**Coverage:** 1993–2026
+
+**Field:** Annual global count of reef cells at bleaching warning level
+
+**Purpose:** Tracks the global scale of coral bleaching over 34 years.
+Key finding: 2024 recorded 447,475 warning cells during a Neutral ENSO
+phase — no El Niño required. Each of the four major bleaching events
+(1998 · 2010 · 2016 · 2024) was worse than the last.
