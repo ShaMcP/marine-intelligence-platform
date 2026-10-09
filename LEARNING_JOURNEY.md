@@ -257,7 +257,7 @@ These came from the data, not from what I expected to find.
 | All species above 30°C | Every tracked species recorded SST above thermal stress threshold at least once |
 
 
-The 2024 bleaching finding is the one that surprised me most. Every major bleaching event before it — 1998, 2010, 2016.
+
 ---
 
 ## Tech Stack
