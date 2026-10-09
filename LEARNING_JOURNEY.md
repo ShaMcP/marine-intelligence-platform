@@ -232,7 +232,7 @@ All six animations are driven by the same Databricks Gold layer queries used for
 
 **The data gap I only found at render time:**
 
-The chlorophyll concentration bounding box for the Gulf of Mexico covered 17–22°N — which excluded the northern Gulf (22–32°N) where whale sharks actually live. This means the habitat stress index for Whale Shark is calculated without valid CC data for most of their range. Documented honestly in the animation notes and flagged for Phase 2 fix via a supplemental NOAA CC download.
+The chlorophyll concentration bounding box for the Gulf of Mexico covered 17–22°N — which excluded the northern Gulf (22–32°N) where whale sharks actually live. This means the habitat stress index for Whale Shark is calculated without valid CC data for most of their range. Documented honestly in the animation notes and flagged for a next fix via a supplemental NOAA CC download.
 
 **The unexpected finding:**
 
