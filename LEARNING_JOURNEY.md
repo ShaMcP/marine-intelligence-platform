@@ -2,7 +2,7 @@
 
 **Building an independent conservation data platform from scratch.**
 
-This document is an honest account of how ATLAS Marine was built — what I planned, what broke, what I learned, and how I fixed it. It covers the full journey from an empty Databricks workspace to published dashboards and a live GitHub repo.
+This document is an honest account of how ATLAS Marine was built — what I planned, what broke, what I learned, and how I fixed it. It covers the full journey from an empty Databricks workspace to published dashboards, a live GitHub repo, and a suite of animated visualisations.
 
 ---
 
@@ -191,6 +191,53 @@ The cause: the merged CSV only contained years where species were being tracked.
 
 ---
 
+## Phase 6 — Animated Visualisations
+
+**Goal:** Build a suite of browser-based animations that show animal movement and ocean conditions changing over time — making the data visible in a way static dashboards can't.
+
+The inspiration came from a MarineTraffic visualisation of Arctic shipping routes — a grid of moving dots that made vessel density immediately legible. I wanted the same thing for ATLAS: not just charts of averages, but the actual animals moving through a warming ocean, month by month.
+
+**What I built:**
+
+Six self-contained HTML canvas animations, each built to answer a different question:
+
+| Animation | Question it answers |
+|---|---|
+| Species tracking dots | Where are the animals, and when? |
+| Movement trails | How do individuals move across months? |
+| SST thermal landscape | What does the temperature field look like beneath the animals? |
+| ENSO phase overlay | Does El Niño / La Niña change where animals go? |
+| Habitat stress index | Which animals are under the most environmental pressure? |
+| Green Turtle deep dive | What does full-resolution tracking density actually look like? |
+
+**The data pipeline for animations:**
+
+All six animations are driven by the same Databricks Gold layer queries used for the dashboards — the difference is output format. Instead of CSVs for Tableau, I wrote queries that export sampled tracking data with environmental columns (SST, MEI value, ENSO phase, habitat stress index) and converted them from Apple Numbers format into embedded JSON using a Python `numbers-parser` script.
+
+The embedded JSON structure groups observations by species → year → month, so each animation frame is an O(1) lookup:
+```python
+tracks[species][year][month]  # → [[lat, lon, sst, ...], ...]
+```
+
+**The mistake documented in the queries (Mistake 6):**
+
+The chlorophyll concentration bounding box for the Gulf of Mexico covered 17–22°N — which excluded the northern Gulf (22–32°N) where whale sharks actually live. This means the habitat stress index for Whale Shark is calculated without valid CC data for most of their range. Documented honestly in the animation notes and flagged for Phase 2 fix via a supplemental NOAA CC download.
+
+**The unexpected finding:**
+
+While building the ENSO animation, I discovered that in Raja Ampat, La Niña average SST (29.47°C) is *higher* than El Niño SST (28.80°C). ENSO theory predicts the opposite — La Niña should cool the Indo-Pacific. The finding suggests that long-term ocean warming has pushed the baseline temperature high enough that even La Niña's cooling signal can no longer bring SST below El Niño levels from a decade ago. The ENSO signal hasn't disappeared; the warming trend underneath it has grown large enough to obscure it.
+
+**What I learned:**
+- The Canvas API is powerful enough for production-quality data visualisation with no external libraries
+- Bilinear interpolation at render time (for the heatmap) is computationally cheap enough to run in a `requestAnimationFrame` loop
+- Sampling data (every 10th row) is the right call for animation performance — 10,000 points on a canvas renders fine; 55,000 does not
+- The Green Turtle deep dive uses all 10,000 available observations at 1.8px dots — the density itself becomes the signal
+- Data cutoffs are not a failure; they're a known state of the pipeline. Document them, plan the re-query, and ship what you have.
+
+**Outcome:** Six animations, all published as shareable links and committed to `design/` in the repository. The Green Turtle deep dive is the most striking — 10,000 dots clustering around Chagos, colouring warmer as the months move into the Indian Ocean's summer.
+
+---
+
 ## The Key Findings
 
 These came from the data, not from what I expected to find.
@@ -201,6 +248,7 @@ These came from the data, not from what I expected to find.
 | 2024 bleaching anomaly | 447,475 warning cells during **Neutral ENSO** — previous records were all El Niño years |
 | Green turtles in Chagos 2016 | 3 green turtles present during the 2016 bleaching event — confirmed by timestamp overlap |
 | All species above 30°C | Every tracked species recorded SST above thermal stress threshold at least once |
+| La Niña paradox in Raja Ampat | La Niña SST (29.47°C) exceeds El Niño SST (28.80°C) — long-term warming overriding ENSO signal |
 
 The 2024 bleaching finding is the one that surprised me most. Every major bleaching event before it — 1998, 2010, 2016 — coincided with El Niño warming. 2024 broke the record in a Neutral ENSO year. The ocean was warm enough on its own.
 
@@ -213,9 +261,10 @@ The 2024 bleaching finding is the one that surprised me most. Every major bleach
 | Databricks | Lakehouse platform — ingestion, transformation, analytics |
 | Delta Lake | ACID-compliant storage, schema enforcement, versioning |
 | SQL | Primary transformation and analytics language |
-| Python (pandas) | Dataset merging and Tableau prep |
+| Python (pandas, numbers-parser) | Dataset merging, Tableau prep, animation data export |
 | Tableau Public | Interactive dashboards |
 | Kepler.gl | Global tracking map (HTML) |
+| Canvas API | Six animated species visualisations |
 | GitHub | Version control and portfolio |
 
 ---
@@ -230,6 +279,8 @@ The 2024 bleaching finding is the one that surprised me most. Every major bleach
 
 4. **Add Kepler.gl earlier.** The global tracking map was the last thing I built and it ended up being visually the most compelling part of the project. It would have shaped how I thought about the data from the start.
 
+5. **Check bounding boxes before building downstream visualisations.** The chlorophyll CC data for the Gulf of Mexico excluded the northern Gulf — where the whale sharks actually live. One `SELECT MIN(lat), MAX(lat)` before writing the habitat stress query would have caught it.
+
 ---
 
 ## What's next
@@ -239,12 +290,13 @@ The 2024 bleaching finding is the one that surprised me most. Every major bleach
 - Manta Trust outreach — sharing the Raja Ampat finding directly with researchers
 - UKRI / NERC grant research (Spring 2027 target)
 
-**Expanding the data:**
+**Phase 2 — Data extension:**
+- Re-query Movebank and OBIS-SEAMAP for post-2022 telemetry deployments and re-ingest through the Bronze → Gold pipeline to bring all four species up to present day
+- Supplemental NOAA CC download for 22–32°N northern Gulf of Mexico to fix the Whale Shark chlorophyll bounding box (Mistake 6)
 - Additional species beyond the current four
 - Ocean plastic and pollution data — layering pollution density alongside animal movement to understand exposure risk
 - Shipping traffic data — identifying overlap between vessel routes and species habitats, particularly for whale strike risk
 - Near-real-time SST ingestion — moving from annual CSV exports to live satellite feeds
-- Expanded coral reef coverage beyond the current bleaching warning cell counts
 
 **Adding AI and machine learning:**
 - Predictive modelling — using historical SST, ENSO, and bleaching patterns to forecast future thermal stress events
@@ -256,6 +308,8 @@ The 2024 bleaching finding is the one that surprised me most. Every major bleach
 - Connecting ATLAS to live Databricks compute via the Databricks for Social Good programme
 - Feature store for ML workflows — making the environmental and tracking data reusable across models
 - API layer — so external researchers can query ATLAS data without needing to access the lakehouse directly
+
+---
 
 ## A bigger ambition
 
