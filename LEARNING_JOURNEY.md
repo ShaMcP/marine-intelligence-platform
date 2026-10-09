@@ -129,7 +129,6 @@ Raw SST data has thousands of lat/lon coordinates. Querying it at full resolutio
 
 When I ran the Raja Ampat trend query, I got +0.52°C warming over 33 years. That's the highest rate in the ATLAS dataset. Raja Ampat is the primary habitat of the Reef Manta Rays I was tracking. The animals showing the most temperature exposure are living in the fastest-warming patch of ocean I measured.
 
-I triple-checked this. It held.
 
 **What I learned:**
 - Gold tables should answer questions, not just store data — design them around your analytical goals
