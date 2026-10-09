@@ -66,7 +66,7 @@ The Bronze / Silver / Gold model isn't just a naming convention — it's a disci
 - Chlorophyll concentration (NOAA, monthly CSVs)
 - Species tracking data (Movebank — manta ray, whale shark, sperm whale, green turtle)
 - ENSO climate index (NOAA)
-- Coral bleaching warning cells (ICRI)
+- Coral bleaching warning cells 
 
 **What broke:**
 Databricks restricted access to the public DBFS root. The original plan was to use AWS S3 as the storage layer — but the S3 bucket configuration didn't come together. Rather than get stuck, I took the practical route: downloaded all the source data to my local machine and uploaded it manually into Databricks. Not the production pattern, but it kept the pipeline moving.
@@ -120,7 +120,7 @@ This single query caught every partial ingestion mistake before it propagated do
 - `environmental_monthly_summary` — SST and chlorophyll aggregated by year/month/spatial grid
 - `species_sst_summary` — per-species temperature analytics
 - `bleaching_timeline` — annual bleaching trend with ENSO context
-- `raja_ampat_warming` — Raja Ampat SST trend (this is where the key finding came from)
+- `raja_ampat_warming` — Raja Ampat SST trend 
 
 **The spatial bucketing decision:**
 Raw SST data has thousands of lat/lon coordinates. Querying it at full resolution is slow and noisy. I rounded latitude and longitude to 1 decimal place to create spatial grid cells. This reduced volume significantly, smoothed out measurement noise, and made the Gold tables fast enough for Tableau without pre-aggregation.
