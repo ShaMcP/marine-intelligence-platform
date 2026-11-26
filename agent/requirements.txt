@@ -1,0 +1,4 @@
+anthropic
+flask
+flask-cors
+gunicorn
