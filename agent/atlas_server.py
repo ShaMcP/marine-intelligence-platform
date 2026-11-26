@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import anthropic
 import os
@@ -28,7 +28,11 @@ PERSONAS = {
     "public": "Explain to non-scientist. Simple language, wow-facts, under 150 words, no jargon."
 }
 
-@app.route('/ask', methods=['POST'])
+@app.route('/')
+def index():
+    return send_from_directory('.', 'atlas-ui.html')
+
+@app.route('/api/ask', methods=['POST'])
 def ask():
     data = request.json
     api_key = os.environ.get('ANTHROPIC_API_KEY')
@@ -40,7 +44,7 @@ def ask():
     )
     return jsonify({'answer': response.content[0].text})
 
-@app.route('/health')
+@app.route('/api/health')
 def health():
     return jsonify({'status': 'ok'})
 
