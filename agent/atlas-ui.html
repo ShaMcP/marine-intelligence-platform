@@ -127,7 +127,7 @@ body::after {
 
   <div class="chat-scroll" id="chatScroll">
     <div class="welcome-card" id="welcomeCard">
-      <h2>Ask ATLAS anything about marine migration</h2>
+      <h2>Ask ATLAS anything about marine life and ocean conditions</h2>
       <p>Four species · three ocean basins · 33 years of NOAA sea surface temperature data</p>
       <div class="species-tags">
         <span class="species-tag">🐢 Green Turtle · 55,247 obs</span>
@@ -145,7 +145,7 @@ body::after {
   </div>
 
   <div class="input-bar">
-    <textarea id="msgInput" placeholder="Ask ATLAS anything about marine migration…" rows="1"
+    <textarea id="msgInput" placeholder="Ask ATLAS anything about marine life and ocean conditions…" rows="1"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"
       oninput="autoResize(this)"></textarea>
     <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
@@ -233,8 +233,3 @@ async function sendMsg() {
 </script>
 </body>
 </html>
-
-
-
-  
-   
