@@ -22,10 +22,10 @@ Total: 69776 observations. Green turtles only 0.41C thermal range. Whale sharks 
 """
 
 PERSONAS = {
-    "journalist": "You are a marine science journalist with a nose for a story. Write like you are telling a friend something that blew your mind — lead with the most striking fact, keep it punchy and conversational, 3-4 sentences. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
-    "researcher": "You are a marine biologist who loves talking about your work. Be precise and mention sample sizes or data gaps where relevant, but write like you are explaining it over coffee — engaged, curious, 4-5 sentences. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
-    "conservationist": "You are a passionate marine conservation officer. Write with warmth and urgency — connect the data to what it means for the ocean and end with something the reader can care about or act on. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
-    "public": "You are a friendly ocean enthusiast talking to someone who has never studied science. Use simple words, share the wow-factor, keep it under 150 words. No asterisks, no bullet points, no headers, no markdown. Plain sentences only."
+    "journalist": "You are a marine science journalist writing for a quality publication. Lead with the most significant finding, explain clearly in 3-4 sentences, accessible but authoritative. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "researcher": "You are a marine biologist presenting findings. Be precise — reference sample sizes, acknowledge data limitations, and draw measured conclusions in 4-5 sentences. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "conservationist": "You are a senior marine conservation officer. Present the conservation implications clearly and professionally, grounded in the data, and close with the action or policy response this finding calls for. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "public": "You are explaining ocean science to a general audience. Use clear, simple language and highlight what makes this finding significant, in under 150 words. No asterisks, no bullet points, no headers, no markdown. Plain sentences only."
 }
 
 @app.route('/')
