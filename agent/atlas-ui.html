@@ -1,79 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ATLAS Marine Intelligence</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500&display=swap">
 <style>
 :root {
   color-scheme: dark;
-  --abyss:      #020810;
-  --deep:       #040f1e;
-  --mid:        #071628;
-  --shelf:      #0a1f38;
-  --reef:       #0e2a4a;
-  --current:    #00c8e0;
-  --current-dim:#0094a8;
-  --foam:       #cce9f0;
-  --mist:       #6a9ab5;
-  --kelp:       #0d4a2e;
-  --kelp-fg:    #2de89a;
-  --warn:       #e05020;
-  --warn-bg:    #2a0f08;
-  padding-left:  max(0px, env(safe-area-inset-left,  0px));
-  padding-right: max(0px, env(safe-area-inset-right, 0px));
+  --abyss: #020810; --deep: #040f1e; --mid: #071628;
+  --shelf: #0a1f38; --reef: #0e2a4a;
+  --current: #00c8e0; --current-dim: #0094a8;
+  --foam: #cce9f0; --mist: #6a9ab5;
+  --kelp: #0d4a2e; --kelp-fg: #2de89a;
+  --warn: #e05020; --warn-bg: #2a0f08;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  height: 100%;
-  background: var(--abyss);
-  color: var(--foam);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
-  overflow: hidden;
-}
+html, body { height: 100%; background: var(--abyss); color: var(--foam); font-family: 'Inter', system-ui, sans-serif; font-size: 15px; line-height: 1.6; overflow: hidden; }
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, #001a3a 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, #001830 0%, transparent 50%),
-    radial-gradient(ellipse 100% 80% at 50% 100%, #000d1a 0%, transparent 70%),
-    var(--abyss);
-  z-index: 0;
-  pointer-events: none;
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 60% at 20% 80%, #001a3a 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 20%, #001830 0%, transparent 50%),
+              radial-gradient(ellipse 100% 80% at 50% 100%, #000d1a 0%, transparent 70%),
+              var(--abyss);
 }
 body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  animation: drift 20s ease-in-out infinite alternate;
   background-image:
     radial-gradient(1px 1px at 15% 25%, rgba(0,200,224,0.4) 0%, transparent 100%),
     radial-gradient(1px 1px at 75% 10%, rgba(0,200,224,0.3) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px at 40% 60%, rgba(0,200,224,0.25) 0%, transparent 100%),
     radial-gradient(1px 1px at 85% 70%, rgba(0,200,224,0.35) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 85%, rgba(0,200,224,0.2) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 60% 40%, rgba(45,232,154,0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 45%, rgba(45,232,154,0.15) 0%, transparent 100%);
-  animation: drift 20s ease-in-out infinite alternate;
-  z-index: 0;
-  pointer-events: none;
+    radial-gradient(1.5px 1.5px at 60% 40%, rgba(45,232,154,0.2) 0%, transparent 100%);
 }
 @keyframes drift {
-  0%   { transform: translateY(0px) translateX(0px); opacity: 0.6; }
+  0%   { transform: translateY(0) translateX(0); opacity: 0.6; }
   50%  { transform: translateY(-8px) translateX(4px); opacity: 1; }
   100% { transform: translateY(-3px) translateX(-6px); opacity: 0.7; }
 }
-#app {
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+#app { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
+.header { flex-shrink: 0; display: flex; align-items: center; gap: 1rem; padding: 0.9rem 20px; border-bottom: 1px solid rgba(0,200,224,0.12); background: rgba(2,8,16,0.8); backdrop-filter: blur(12px); }
+.logo-orb { width: 38px; height: 38px; border-radius: 50%; background: conic-gradient(from 180deg, #00c8e0 0%, #0077b6 40%, #023e8a 70%, #00c8e0 100%); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 0 16px rgba(0,200,224,0.4); flex-shrink: 0; }
+.logo-text h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--current); letter-spacing: 0.1em; text-shadow: 0 0 20px rgba(0,200,224,0.5); }
+.logo-text p { font-size: 0.7rem; color: var(--mist); }
+.persona-bar { flex-shrink: 0; display: flex; gap: 0.5rem; padding: 0.65rem 20px; border-bottom: 1px solid rgba(0,200,224,0.08); background: rgba(4,15,30,0.7); flex-wrap: wrap; }
+.persona-tab { padding: 0.35rem 0.85rem; border-radius: 20px; border: 1px solid var(--reef); background: transparent; color: var(--mist); font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.persona-tab:hover { border-color: var(--current-dim); color: var(--foam); background: rgba(0,200,224,0.06); }
+.persona-tab.active { background: rgba(0,200,224,0.15); border-color: var(--current); color: var(--current); font-weight: 600; box-shadow: 0 0 10px rgba(0,200,224,0.2); }
+.welcome-card { margin: 16px 20px; background: rgba(7,22,40,0.85); border: 1px solid rgba(0,200,224,0.15); border-radius: 14px; padding: 1.25rem 1.4rem; backdrop-filter: blur(8px); flex-shrink: 0; box-shadow: 0 4px 32px rgba(0,0,0,0.4); }
+.welcome-card h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--current); margin-bottom: 0.4rem; }
+.welcome-card > p { font-size: 0.82rem; color: var(--mist); margin-bottom: 1rem; }
+.species-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.species-tag { background: var(--kelp); color: var(--kelp-fg); border-radius: 20px; padding: 0.22rem 0.75rem; font-size: 0.72rem; font-weight: 500; border: 1px solid rgba(45,232,154,0.2); }
+.suggested-qs { display: flex; flex-direction: column; gap: 0.35rem; }
+.suggested-qs button { background: rgba(10,31,56,0.6); border: 1px solid var(--reef); border-radius: 8px; padding: 0.55rem 0.9rem; color: var(--foam); font-size: 0.8rem; text-align: left; cursor: pointer; transition: border-color 0.15s, background 0.15s; font-family: 'Inter', sans-serif; }
+.suggested-qs button:hover { border-color: var(--current-dim); background: rgba(0,200,224,0.05); color: var(--current); }
+.chat-scroll { flex: 1; overflow-y: auto; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: thin; scrollbar-color: var(--reef) transparent; }
+.msg-wrap { display: flex; }
+.msg-wrap.user { justify-content: flex-end; }
+.bubble { max-width: 82%; padding: 0.75rem 1rem; border-radius: 14px; font-size: 0.88rem; line-height: 1.65; white-space: pre-wrap; }
+.msg-wrap.user .bubble { background: linear-gradient(135deg, #006a80, #004f70); color: #d4f4fa; border-radius: 14px 14px 3px 14px; border: 1px solid rgba(0,200,224,0.3); }
+.msg-wrap.agent .bubble { background: rgba(7,22,40,0.9); border: 1px solid rgba(0,200,224,0.12); border-radius: 14px 14px 14px 3px; color: var(--foam); }
+.typing-wrap { display: flex; align-items: center; gap: 5px; padding: 12px 14px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--current); animation: pulse 1.3s ease-in-out infinite; box-shadow: 0 0 6px rgba(0,200,224,0.6); }
+.dot:nth-child(2) { animation-delay: 0.22s; }
+.dot:nth-child(3) { animation-delay: 0.44s; }
+@keyframes pulse { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
+.error-msg { background: var(--warn-bg); border: 1px solid rgba(224,80,32,0.4); border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.82rem; color: #f4a07a; }
+.input-bar { flex-shrink: 0; border-top: 1px solid rgba(0,200,224,0.1); padding: 12px 20px; display: flex; gap: 0.65rem; align-items: flex-end; background: rgba(2,8,16,0.85); backdrop-filter: blur(12px); }
+.input-bar textarea { flex: 1; min-width: 0; background: rgba(10,31,56,0.8); border: 1px solid rgba(0,200,224,0.2); border-radius: 12px; padding: 0.7rem 1rem; color: var(--foam); font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: none; min-height: 46px; max-height: 120px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.5; }
+.input-bar textarea:focus { border-color: var(--current); box-shadow: 0 0 0 3px rgba(0,200,224,0.1); }
+.input-bar textarea::placeholder { color: var(--mist); }
+.send-btn { background: linear-gradient(135deg, #00b4c8, #0077a0); border: none; border-radius: 12px; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 1.1rem; box-shadow: 0 0 16px rgba(0,200,224,0.3); transition: box-shadow 0.15s; }
+.send-btn:hover { box-shadow: 0 0 24px rgba(0,200,224,0.5); }
+.send-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+.status-bar { flex-shrink: 0; background: rgba(2,8,16,0.9); padding: 0.3rem 20px; font-size: 0.68rem; color: var(--mist); border-top: 1px solid var(--reef); letter-spacing: 0.03em; }
+.status-bar .ok { color: var(--kelp-fg); }
+.status-bar .err { color: #f4a07a; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="logo-orb">🌊</div>
+    <div class="logo-text">
+      <h1>ATLAS</h1>
+      <p>Marine Intelligence Platform · 69,776 observations</p>
+    </div>
+  </div>
+  <div class="persona-bar">
+    <button class="persona-tab active" data-p="journalist" onclick="setPersona(this)">🗞 Journalist</button>
+    <button class="persona-tab" data-p="researcher" onclick="setPersona(this)">🔬 Researcher</button>
+    <button class="persona-tab" data-p="conservationist" onclick="setPersona(this)">🌿 Conservationist</button>
+    <button class="persona-tab" data-p="public" onclick="setPersona(this)">💬 Public</button>
+  </div>
+  <div class="chat-scroll" id="chatScroll">
+    <div class="welcome-card" id="welcomeCard">
+      <h2>Ask ATLAS anything about marine migration</h2>
+      <p>Four species · three ocean basins · 33 years of NOAA sea surface temperature data</p>
+      <div class="species-tags">
+        <span class="species-tag">🐢 Green Turtle · 55,247 obs</span>
+        <span class="species-tag">🦈 Whale Shark · 3,330 obs</span>
+        <span class="species-tag">🐳 Sperm Whale · 7,759 obs</span>
+        <span class="species-tag">🐟 Reef Manta Ray · 1,451 obs</span>
+      </div>
+      <div class="suggested-qs">
+        <button onclick="quickAsk(this.textContent)">Which species is most at risk from climate change?</button>
+        <button onclick="quickAsk(this.textContent)">What is the most surprising finding in this dataset?</button>
+        <button onclick="quickAsk(this.textContent)">Which location shows the most dramatic environmental change?</button>
+        <button onclick="quickAsk(this.textContent)">What does ENSO do to whale shark migration patterns?</button>
+      </div>
+    </div>
+  </div>
+  <div class="input-bar">
+    <textarea id="msgInput" placeholder="Ask ATLAS anything about marine migration…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"
+      oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+  </div>
+  <div class="status-bar" id="statusBar">Connecting to ATLAS…</div>
+</div>
+<script>
+let persona = 'journalist', busy = false;
+async function ping() {
+  try {
+    const r = await fetch('/api/health');
+    document.getElementById('statusBar').innerHTML = r.ok
+      ? 'ATLAS · <span class="ok">● Live</span> · 69,776 observations across four species'
+      : '<span class="err">● Server offline</span>';
+  } catch(e) {
+    document.getElementById('statusBar').innerHTML = '<span class="err">● Server offline</span>';
+  }
 }
-.header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.9rem max(20px, env(safe-area-inset-left, 0px));
-  border-bottom: 1px solid
+ping(); setInterval(ping, 10000);
+function setPersona(btn) {
+  document.querySelectorAll('.persona-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active'); persona = btn.dataset.p;
+}
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+function appendMsg(role, text) {
+  const wrap = document.createElement('div'); wrap.className = 'msg-wrap ' + role;
+  const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = text;
+  wrap.appendChild(bubble); document.getElementById('chatScroll').appendChild(wrap);
+  document.getElementById('chatScroll').scrollTop = 99999;
+}
+function showTyping() {
+  const wrap = document.createElement('div'); wrap.className = 'msg-wrap agent'; wrap.id = 'typingWrap';
+  wrap.innerHTML = '<div class="bubble"><div class="typing-wrap"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+  document.getElementById('chatScroll').appendChild(wrap); document.getElementById('chatScroll').scrollTop = 99999;
+}
+function removeTyping() { const t = document.getElementById('typingWrap'); if (t) t.remove(); }
+function showError(msg) {
+  removeTyping();
+  const d = document.createElement('div'); d.className = 'error-msg'; d.textContent = msg;
+  document.getElementById('chatScroll').appendChild(d); document.getElementById('chatScroll').scrollTop = 99999;
+}
+function quickAsk(q) { document.getElementById('msgInput').value = q; autoResize(document.getElementById('msgInput')); sendMsg(); }
+async function sendMsg() {
+  if (busy) return;
+  const input = document.getElementById('msgInput');
+  const question = input.value.trim(); if (!question) return;
+  const wc = document.getElementById('welcomeCard'); if (wc) wc.style.display = 'none';
+  input.value = ''; autoResize(input); busy = true; document.getElementById('sendBtn').disabled = true;
+  appendMsg('user', question); showTyping();
+  try {
+    const res = await fetch('/api/ask', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({question, persona}) });
+    removeTyping();
+    const data = await res.json();
+    if (data.error) showError(data.error); else appendMsg('agent', data.answer);
+  } catch(e) { showError('Could not reach ATLAS. (' + e.message + ')'); }
+  busy = false; document.getElementById('sendBtn').disabled = false; input.focus();
+}
+</script>
+</body>
+</html>
