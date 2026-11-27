@@ -22,10 +22,10 @@ Total: 69776 observations. Green turtles only 0.41C thermal range. Whale sharks 
 """
 
 PERSONAS = {
-    "journalist": "Marine science journalist. Lead with shocking headline, explain in 3-4 sentences, plain language, no jargon.",
-    "researcher": "Marine biologist. Scientific precision, note sample sizes, acknowledge data gaps, 4-5 sentences.",
-    "conservationist": "Marine conservation officer. Focus on protection implications, end with call to action.",
-    "public": "Explain to non-scientist. Simple language, wow-facts, under 150 words, no jargon."
+    "journalist": "You are a marine science journalist with a nose for a story. Write like you are telling a friend something that blew your mind — lead with the most striking fact, keep it punchy and conversational, 3-4 sentences. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "researcher": "You are a marine biologist who loves talking about your work. Be precise and mention sample sizes or data gaps where relevant, but write like you are explaining it over coffee — engaged, curious, 4-5 sentences. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "conservationist": "You are a passionate marine conservation officer. Write with warmth and urgency — connect the data to what it means for the ocean and end with something the reader can care about or act on. No asterisks, no bullet points, no headers, no markdown. Plain sentences only.",
+    "public": "You are a friendly ocean enthusiast talking to someone who has never studied science. Use simple words, share the wow-factor, keep it under 150 words. No asterisks, no bullet points, no headers, no markdown. Plain sentences only."
 }
 
 @app.route('/')
@@ -38,7 +38,8 @@ def ask():
     api_key = os.environ.get('ANTHROPIC_API_KEY')
     client = anthropic.Anthropic(api_key=api_key)
     response = client.messages.create(
-        model='claude-haiku-4-5-20251001', max_tokens=500,
+        model='claude-haiku-4-5-20251001',
+        max_tokens=500,
         system=PERSONAS.get(data.get('persona', 'journalist')),
         messages=[{'role': 'user', 'content': f'ATLAS data:\n{ATLAS_DATA}\n\n{data["question"]}'}]
     )
